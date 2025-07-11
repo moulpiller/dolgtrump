@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Долг Президента США</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-top: 50px;
+        }
+        #counter {
+            font-size: 3em;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-top: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .info {
+            color: #7f8c8d;
+            margin-top: 50px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Сколько Денег Мне Должен Президент США На Данный Момент</h1>
+    <div id="counter">Загрузка...</div>
+    <div class="info">Обновляется в реальном времени • Начальная сумма: 10 000 ₽</div>
+
+    <script>
+        // Начальные условия
+        const START_AMOUNT = 10000;
+        const START_DATE = new Date('2025-07-12T00:00:00');
+        const DAILY_RATE = 0.01;   // 1% в день
+        const WEEKLY_RATE = 0.42;  // 42% в неделю
+        
+        function calculateDebt() {
+            const now = new Date();
+            const timeDiff = now - START_DATE;
+            
+            // Рассчитываем количество дней и недель
+            const daysPassed = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const weeksPassed = Math.floor(daysPassed / 7);
+            
+            // Рассчитываем сумму долга
+            let debt = START_AMOUNT;
+            
+            // Применяем ежедневные проценты
+            debt = debt * Math.pow(1 + DAILY_RATE, daysPassed);
+            
+            // Применяем еженедельные проценты
+            debt = debt * Math.pow(1 + WEEKLY_RATE, weeksPassed);
+            
+            // Форматируем число
+            return debt.toLocaleString('ru-RU', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }) + " ₽";
+        }
+
+        function updateCounter() {
+            document.getElementById('counter').textContent = calculateDebt();
+        }
+
+        // Обновляем счетчик сразу и каждую минуту
+        updateCounter();
+        setInterval(updateCounter, 60000);
+    </script>
+</body>
+</html>
